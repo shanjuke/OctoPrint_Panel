@@ -1,0 +1,141 @@
+/* fond : #23527C */
+/* traits : #337AB7 */
+@font-face { 	font-family: "segoe_ui"; 	src: url('font/segoe-ui.ttf'); }
+body{ 
+	font-family: 'Helvetica'; 
+	background-color:rgb(36, 114, 152); 
+	color:white;
+	overflow:hidden;
+}
+header{ border-bottom: 1px solid white; }
+#btn_home{ position: relative; }
+#en_cours{ position: absolute; right: 0; display: none;}
+/** menu principal **/
+#menu { padding-left: 0 !important; position: relative;}
+#extinction{ 
+	background: url('images/bicephalee.jpg') center center / cover; 
+	height: 240px; 
+	display:none; 
+}
+.item { width: 100px; height: 100px; position:relative;}
+li:hover{ background-color: rgb(27, 84, 112);}
+.titre { position: absolute; bottom:0; left:0; right:0;}
+
+.modal{ color: black; }
+/** liste de fichiers **/
+#list_imgs { 
+	height: 240px; 
+	overflow: auto; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+#list_imgs li div{ width:66px; height:66px; border:1px solid #337AB7; }
+#menu .glyphicon { top:30px; left: 30px;}
+/** détail du fichier **/
+#img_detail{ 
+	height: 240px; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+#img_infos{ 
+	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.1);
+	height: 240px;
+	//width: 200px !important; 
+	text-shadow: 0px 0px 2px black;
+}
+
+/** block préchauffage **/
+#heating_block{ 
+	height: 240px; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+
+.heating_info{ font-size: 5em;}
+
+/** block impression **/
+#printing_block{ 
+	height: 240px; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+
+.film{
+	height: 240px;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+}
+
+#content{ position: relative;}
+#content_cancel{
+	display: none;
+	top: -190px;
+}
+
+/** block Filament */
+#filament_menu, #remove_filament { 
+	height: 240px; width: 311px;
+	overflow: auto; 
+	position: relative;
+	left: 311px;
+	display: none;
+	padding:0;
+}
+
+#filament_menu .glyphicon { top:30px; left: 30px;}
+
+/** block Infos **/
+#infos_menu{ background: url('../images/bicephale_mini.png') 0 -34px /cover; height: 240px; display:none; }
+
+/** block X,Y,Z **/
+#xyz_menu{ 
+	height: 240px; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+
+#xyz_menu .btn{
+	//border-radius: 20px;
+	width: 40px;
+	height: 40px;
+}
+
+/** block Paramètres **/
+#parametres_menu{
+	height: 240px; 
+	position: relative;
+	left: 311px;
+	display: none;
+}
+
+.checkbox {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 13px; margin-right:10px; line-height:18px;
+}
+input[type=checkbox] {
+ display:none;	
+}
+.checkbox:before {
+	content: "";
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align:middle;
+	background-color: #0088cc;
+	color: #f3f3f3;
+	text-align: center;
+	box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);	
+	border-radius: 3px;
+}
+input[type=checkbox]:checked + .checkbox:before {
+	content: "\2713";
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+	font-size: 15px;
+}
+
