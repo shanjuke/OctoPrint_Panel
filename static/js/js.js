@@ -370,7 +370,7 @@ $(document).ready(function(){
 			// Changement de Page
 			$( "#"+page+"" ).animate(
 				{ "left": "-=320px" }, 
-				"easeOutBounce", 
+				"fast", 
 				function(){ 
 					$( "#"+page+"" ).css("display","none"); 
 					$( "#"+suivante+"" ).css("display","block"); 
@@ -381,7 +381,7 @@ $(document).ready(function(){
 			if(titre != null && titre_page_suivante != null){
 				$( "#btn_home" ).animate(
 					{ "left": "-=100px" }, 
-					"easeOutBounce", 
+					"fast", 
 					function(){ 
 						$( "#btn_home" ).css("left","0"); 
 						$( "#btn_home_title" ).text(titre); 

@@ -3,7 +3,6 @@
 
 from flask import Flask
 from flask import render_template
-#from flask import request
 from fonctions import Fonctions
 
 
@@ -35,7 +34,6 @@ def reboot():
 # Jog axis to x, y, z position
 @app.route('/jog/<x>/<y>/<z>')
 def jog(x, y, z):
-    #print("x"+x+"-y"+y+"-z"+z)
     f.jog(x, y, z)
     return "X : "+x+", Y: "+y+", Z: "+z
 
