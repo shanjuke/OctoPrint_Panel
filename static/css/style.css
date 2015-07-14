@@ -18,7 +18,7 @@ header{ border-bottom: 1px solid white; }
 	display:none; 
 }
 .item { width: 100px; height: 100px; position:relative;}
-li:hover{ background-color: rgb(27, 84, 112);}
+li:hover, li:active{ background-color: rgb(27, 84, 112);}
 .titre { position: absolute; bottom:0; left:0; right:0;}
 
 .modal{ color: black; }
@@ -66,7 +66,7 @@ li:hover{ background-color: rgb(27, 84, 112);}
 
 .film{
 	height: 240px;
-	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(0,0,0,0.75);
 	color: white;
 }
 
@@ -113,29 +113,89 @@ li:hover{ background-color: rgb(27, 84, 112);}
 	display: none;
 }
 
-.checkbox {
-	display: inline-block;
-	cursor: pointer;
-	font-size: 13px; margin-right:10px; line-height:18px;
-}
-input[type=checkbox] {
- display:none;	
-}
-.checkbox:before {
-	content: "";
-	display: inline-block;
-	width: 18px;
-	height: 18px;
-	vertical-align:middle;
-	background-color: #0088cc;
-	color: #f3f3f3;
-	text-align: center;
-	box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);	
-	border-radius: 3px;
-}
-input[type=checkbox]:checked + .checkbox:before {
-	content: "\2713";
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-	font-size: 15px;
+.boutons{
+	border-radius: 20px;
+	height: 40px;
+	width: 40px;
 }
 
+input[type=checkbox] {
+	visibility: hidden;
+}
+.slideThree {
+	width: 55px;
+	height: 26px;
+	background: #333;
+
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	position: relative;
+
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+	box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+}
+
+
+.slideThree label {
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin-top: 0;
+
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+
+	-webkit-transition: all .4s ease;
+	-moz-transition: all .4s ease;
+	-o-transition: all .4s ease;
+	-ms-transition: all .4s ease;
+	transition: all .4s ease;
+	cursor: pointer;
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	z-index: 1;
+
+	-webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+	box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+	background: #fcfff4;
+
+	background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+}
+
+.slideThree input[type=checkbox]:checked + label {
+	left: 33px;
+}
+.slideThree input[type=checkbox]:not(:checked) + label::after {
+	content: "OFF";
+	position: absolute;
+	font: 12px/26px Arial, sans-serif;
+	color: #000;
+	position: absolute;
+	left: 25px;
+	top: -4px;
+	z-index: 0;
+	font-weight: bold;
+	text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+}
+.slideThree input[type=checkbox]:checked + label::before {
+	content: "ON";
+	position: absolute;
+	font: 12px/26px Arial, sans-serif;
+	color: #fff;
+	//color: #00bf00;
+	position: absolute;
+	right: 25px;
+	top: -4px;
+	z-index: 0;
+	font-weight: bold;
+}

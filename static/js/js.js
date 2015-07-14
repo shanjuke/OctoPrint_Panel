@@ -56,9 +56,22 @@ $(document).ready(function(){
 		});
 
 		//2.Imprimer
+		//...
+		var freq = 1000;
+		var url = octopi_server+'state/all';
+		var repeat;
+
+		var print_progression = $("#print_progression");
+		var time_left = $("#time_left");
+		var printing_name = $("#printing_name");
+
+		var progression = 0;
+
 		//Menu
 		$( "#print" ).click(function(){
 			go_forward("menu", "list_imgs", "Fichiers", "fichiers", true);
+			//TODO: Demander la liste des fichiers disponibles
+			send(octopi_server+'files','');
 		});
 		//Liste
 		$( ".img_item" ).click(function(){
@@ -87,6 +100,36 @@ $(document).ready(function(){
 				);
 
 			 }, 3000);
+
+			//Acquition des paramètres de l'imprimante
+			repeat = setInterval(function(){		        
+		        xmlhttp.open("GET", url, true);
+		        xmlhttp.onreadystatechange = function (aEvt) {
+		              if (xmlhttp.readyState == 4) {
+		                 if(xmlhttp.status == 200){
+		                 	var response = xmlhttp.responseText;
+		                 	try{
+		                 		var json_response = JSON.parse(response);
+		                 	}catch(e){
+		                 		console.log("Fichier n'est pas au format Json");
+		                 	}
+		             		//console.log(JSON.stringify(json_response));
+		             		print_progression.text(progression+"%");
+		             		time_left.text(json_response[1]["progress"]["printTimeLeft"]+"mn");
+		             		printing_name.text(json_response[1]["job"]["file"]["name"]);
+
+		             		console.log("print_progression :"+ progression);
+		             		console.log("time_left :"+ json_response[1]["progress"]["printTimeLeft"]);
+		             		console.log("printing_name :"+ json_response[1]["job"]["file"]["name"]);
+
+		                 }else{
+		                  console.log("Erreur pendant le chargement de la page.\n");
+		                 }
+		              }
+	            };
+		        xmlhttp.send();		        
+			
+			}, freq);
 
 		});
 
@@ -296,8 +339,8 @@ $(document).ready(function(){
 		temp_value.text(temp_value_init + "°");
 		vit_value.text(vit_value_init);
 		
-		$( "#led" ).click(function(){
-	        if($("#led").is(':checked')){
+		$( "#slideThree" ).click(function(){
+	        if($("#slideThree").is(':checked')){
                 console.log("switch led on");
                 send(octopi_server+'switch/on','');
 	        }else{
@@ -307,14 +350,17 @@ $(document).ready(function(){
 		});
 		
 		$( "#btn_vitesse_moins" ).click(function(){
-			console.log("value "+ vit_value.value);
+			console.log("value "+ vit_value.val());
 			var str = $( "#vitesse_value" ).val() - pas_vitesse;
 			console.log("str " + str);
-			vit_value.text(str);
+			vit_value.text(str+"m/s");
 		});
 		
 		$( "#btn_vitesse_plus" ).click(function(){
-			
+			console.log("value "+ vit_value.val());
+			var str = $( "#vitesse_value" ).val() + pas_vitesse;
+			console.log("str " + str);
+			vit_value.text(str+"m/s");
 		});
 		
 		$( "#btn_vitesse_valider" ).click(function(){
@@ -432,6 +478,9 @@ $(document).ready(function(){
 		};
 		//fonction arrêter
 		function stop_printing(){
+			//Arret du recueil d'infos 
+			clearInterval(repeat);
+
 			// On efface les notification
 			$('#en_cours').css("display","none");
 
@@ -478,48 +527,6 @@ $(document).ready(function(){
 		
 		};
 		
-		//Acquition des paramètres de l'imprimante
-		var freq = 1000;
-		var url = octopi_server+'state/all';
-		
-		var print_progression = $("#print_progression");
-		var time_left = $("#time_left");
-		var printing_name = $("#printing_name");
-
-		var progression = 0;
-
-		var repeat = setInterval(function(){		        
-	        xmlhttp.open("GET", url, true);
-	        xmlhttp.onreadystatechange = function (aEvt) {
-	              if (xmlhttp.readyState == 4) {
-	                 if(xmlhttp.status == 200){
-	                 	var response = xmlhttp.responseText;
-	                 	try{
-	                 		var json_response = JSON.parse(response);
-	                 	}catch(e){
-	                 		console.log("Fichier n'est pas au format Json");
-	                 	}
-	             		//console.log(JSON.stringify(json_response));
-	             		print_progression.text(progression+"%");
-	             		time_left.text(json_response[1]["progress"]["printTimeLeft"]+"mn");
-	             		printing_name.text(json_response[1]["job"]["file"]["name"]);
-
-
-	             		console.log("print_progression :"+ progression);
-	             		console.log("time_left :"+ json_response[1]["progress"]["printTimeLeft"]);
-	             		console.log("printing_name :"+ json_response[1]["job"]["file"]["name"]);
-
-	                 	
-	                 	
-	                 }else{
-	                  console.log("Erreur pendant le chargement de la page.\n");
-	                 }
-	              }
-            };
-	        xmlhttp.send();		        
-		
-		}, freq);
-
 		// Calculer le pourcentage de progression
 		function progression(timeLeft, time){
 			var result = 0.0;
@@ -528,4 +535,5 @@ $(document).ready(function(){
 			}
 			return result;
 		};
-	});
+
+});

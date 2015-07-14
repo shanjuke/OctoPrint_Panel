@@ -6,14 +6,13 @@ from flask import render_template
 from fonctions import Fonctions
 
 
-
 app = Flask(__name__)
 app.debug = True
 
 host = "0.0.0.0"
 port = 4000
 octopi_port = 5000 
-        
+    
 # Render the panel interface
 @app.route('/')
 def index():  
@@ -85,6 +84,11 @@ def state(type):
     datas = f.state(type)                
     return datas
 
+# Get machine list of files...
+@app.route('/files')
+def get_files():
+    datas = f.get_files()                
+    return datas
     
 @app.route('/change_filament', methods=['GET'])
 def change_filament(self, value='nothing'):

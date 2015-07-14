@@ -26,8 +26,7 @@ class Fonctions():
 			self.apiurl_connection = '{0}/api/connection'.format(self.api_baseurl)
 			
 			self.apiurl_files = '{0}/api/printer/datamodel/sdstate'.format(self.api_baseurl)
-			#self.apiurl_files = '{0}/api/printer/state'.format(self.api_baseurl)
-
+			
 			print("Chargement des fonctions ...")
 		
 		# Reboot system
@@ -149,7 +148,25 @@ class Fonctions():
 			 	pass
 
 			 return json.dumps(datas)
-										
+
+		def get_files(self):
+			datas = {}
+			try:
+				# Get status update
+				req = requests.get(self.apiurl_files)
+
+				if req.status_code == 200:
+				   datas = json.loads(req.text)
+				   print json.dumps(datas)
+				   # Remplir data1 avec les données
+				else:
+				   print "Erreur(req1) : status code - {0} -> {1}".format(req.status_code, req.text)
+
+			except requests.exceptions.ConnectionError as e:
+				print "Connection Error ({0}): {1}".format(e.errno, e.strerror)
+			
+			return json.dumps(datas)
+		
 		# Send API-data to OctoPrint
 		def _sendAPICommand(self, url, data):
 			headers = { 'content-type': 'application/json', 'X-Api-Key': self.apikey }

@@ -65,6 +65,7 @@
 			</div>
 		</ul>
 		<div id="extinction" ></div>
+
 		<!-- 2. Menu liste des fichiers -->
 		<div id="list_imgs">
 			<ul class="pa0 mod" style="height: 293px;">
@@ -86,7 +87,6 @@
 			  </li>
 			</ul>
 		</div>
-
 		<!-- 2.1 Menu détail du fichier -->
 		<div id="img_detail" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
 			<div id="img_infos" class="mod pls prs">
@@ -136,21 +136,19 @@
 
 			</div>
 		</div>
-
 		<!-- 2.2 Heating block -->
 		<div id="heating_block">
 			<p class="heating_info line txtcenter">68%</p>
 			<p class="line txtcenter">heating...to 118°</p>
 		</div>
-
 		<!-- 2.3 Printing block -->
 		<div id="printing_block" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
 			<div class="film pas">
 				<div class="" id="content">
 					<p id="printing_name" class="pas txtcenter mb0" style="font-size: 1.5em;"> Légo </p>
 					<div class="progress">
-						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-							<span class="sr-only">45% Complete</span>
+						<div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+							45% Complete...
 						</div>
 					</div>
 					<div class="w50 center">
@@ -190,8 +188,8 @@
 				</div>
 			  </div>
 			</div>
-			
 		</div>
+
 		<!-- 3. Menu Changement de filament -->
 		<ul id="filament_menu">		    
 		    <li id="print" class="pas item inbl filament_item">	
@@ -207,7 +205,6 @@
 				<span class="pas titre txtcenter"> HIPS </span>
 		    </li>
 		</ul>
-		
 		<!-- 3.1 Heating block -->
 		<!-- 3.2 Remove filament block -->
 		<div id="remove_filament">
@@ -269,7 +266,7 @@
 						<button id="y_moins" type="button"  class="btn btn-default">
 							<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
 						</button>
-						<button id="house_xy" type="button"  class="btn btn-danger">
+						<button id="house_xy" type="button"  class="btn btn-danger boutons">
 							<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 						</button>
 						<button id="y_plus" type="button"  class="btn btn-default">
@@ -287,7 +284,7 @@
 						<button id="z_plus" type="button"  class="btn btn-default">
 							<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 						</button>
-						<button id="house_z" type="button"  class="btn btn-danger" style="position:absolute; top:45px; left:0;">
+						<button id="house_z" type="button"  class="btn btn-danger boutons" style="position:absolute; top:45px; left:0;">
 							<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 						</button>
 						<button id="z_moins" type="button" style="position: absolute;  bottom:0; left:0;" class="btn btn-default">
@@ -304,30 +301,43 @@
 		<!-- 6. Paramètres block -->
 		<div id="parametres_menu" class="pas">
 			<div class="line pas pt0">
-				<p class="fl mb0">Led</p>
-				<p class="fr mb0">
-				        <input type="checkbox" id="led">
-				        <label class="checkbox" for="led">On</label>
-				</p>
-			</div>
-			<div class="line pas pt0">
-				<p class="fl mb0">Vitesse</p>
-				<div class="fr mb0">
-					<button id="btn_vitesse_moins" type="button" class="btn btn-default fl" >-</button>
-					<p id="vitesse_value" class="inbl pas mb0">10</p>
-					<button id="btn_vitesse_plus" type="button" class="btn btn-default mrl" >+</button>
-					<button id="btn_vitesse_valider" type="button" class="btn btn-danger fr" >ok</button>
+				<p class="fl mb0 mls">Allumer les led</p>
+				<div class="slideThree fr">	
+					<input type="checkbox" value="None" id="slideThree" name="check" />
+					<label for="slideThree"></label>
 				</div>
 			</div>
 			<div class="line pas pt0">
-				<p class="fl mb0">Température</p>
+				<p class="fl mb0" style="display:none;">Vitesse</p>
+				<div class="fr mb0 line">
+					<button id="btn_vitesse_moins" type="button" class="btn btn-default fl boutons" >
+						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+					</button>
+					<p id="vitesse_value" class="inbl pas mb0 w100p txtcenter">10m/s</p>
+					<button id="btn_vitesse_plus" type="button" class="btn btn-default mrl boutons" >
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					</button>
+					<button id="btn_vitesse_valider" type="button" class="btn btn-danger fr boutons" >
+						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+			<div class="line pas pt0">
+				<p class="fl mb0" style="display:none;">Température</p>
 				<div class="fr mb0">
-					<button id="btn_temperature_moins" type="button" class="btn btn-default fl" >-</button>
-					<p id="temperature_value" class="inbl pas mb0">10</p>
-					<button id="btn_temperature_plus" type="button" class="btn btn-default mrl" >+</button>
-					<button id="btn_temperature_valider" type="button" class="btn btn-danger fr" >ok</button>
+					<button id="btn_temperature_moins" type="button" class="btn btn-default fl boutons" >
+						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+					</button>
+					<p id="temperature_value" class="inbl pas mb0 w100p txtcenter">10</p>
+					<button id="btn_temperature_plus" type="button" class="btn btn-default mrl boutons" >
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					</button>
+					<button id="btn_temperature_valider" type="button" class="btn btn-danger fr boutons" >
+						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+					</button>
 				</div>
 			</div>
 		</div>
+
 	</body>
 </html>
