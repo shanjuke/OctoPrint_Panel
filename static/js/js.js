@@ -1,10 +1,4 @@
 $(document).ready(function(){
-		// Onload function
-		//window.onload = function(){ $( "#load" ).css("display","block"); };
-		//$(window).load(function() { $( "#load" ).css("display","block"); });
-		//$(window).ready(function() { $( "#load" ).css("display","none"); });
-		//window.DOMContentLoaded = function(){ $( "#load" ).css("display","none"); };
-		
 		// Valeurs possibles de la variable menu: 
 		//home, fichiers, detail, impression, filaments, infos, xyz, parametres	 
 		var menu = "home"; 
@@ -77,7 +71,7 @@ $(document).ready(function(){
 		$( "#print" ).click(function(){
 			go_forward("menu", "list_imgs", "Fichiers", "fichiers", true);
 			//TODO: Demander la liste des fichiers disponibles
-			send(octopi_server+'files','');
+			send(octopi_server+'files');
 		});
 		//Liste
 		$( ".img_item" ).click(function(){
@@ -86,7 +80,7 @@ $(document).ready(function(){
 		//Lancer impression
 		$('#btn_imprimer').on('click', function () {
 		    //TODO: Send command to start the print
-		    send(octopi_server+'start_print','');
+		    send(octopi_server+'start_print');
 		    
 		    go_forward("img_detail", "heating_block", null, null, false);
 			
@@ -164,26 +158,26 @@ $(document).ready(function(){
 		//Arrêter l'impression
 		$('#btn_arreter').on('click', function(){
 			console.log("annuler l'impression !");
-		    send(octopi_server+'cancel','');
+		    send(octopi_server+'cancel');
 			stop_printing();
 		});
 		
 		//Mettre l'impression en pause 
 		$('#btn_pause').on('click', function () {
 			console.log("impression sous pause !");	
-			send(octopi_server+'pause','');		
+			send(octopi_server+'pause');		
 		});
 		
 		//Reprendre l'impression 
 		$('#btn_pause_continuer').on('click', function () {
 			console.log("reprise de l'impression !");
-			send(octopi_server+'resume','');			
+			send(octopi_server+'resume');			
 		});
 		
 		//Arrêter l'impression après la pause
 		$('#btn_pause_arreter').on('click', function () {
 			console.log("annuler l'impression !");
-			send(octopi_server+'cancel','');
+			send(octopi_server+'cancel');
 			stop_printing();
 		});
 		
@@ -254,81 +248,75 @@ $(document).ready(function(){
 
 		//Gestion des boutons
 		var X = 0; var Y = 0; var Z = 0;
-		var XMax = 10; var YMax = 10; var ZMax = 10;
+		var XMax = 300; var YMax = 300; var ZMax = 300;
 		
 		$( "#x_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			X = X + parseFloat(pas);
-			if(X >= 0 && X <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str);
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+	        send(octopi_server+'jogX/'+parseFloat(pas));
+
+			X = "+" + parseFloat(pas);
+			var str = "X:"+X;
+	        $( ".position_xyz" ).text(str);
+
 		});
 		$( "#x_moins" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			X = X - parseFloat(pas);
-			if(X >= 0 && X <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str); 
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+			send(octopi_server+'jogX/'+ -parseFloat(pas));
+
+			X = "-" + parseFloat(pas);
+			var str = "X:"+X;
+			$( ".position_xyz" ).text(str);
+			
 		});
 		$( "#y_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			Y = Y + parseFloat(pas);
-			if(Y >= 0 && Y <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str); 
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+			send(octopi_server+'jogY/'+parseFloat(pas));
+
+			Y = "+" + parseFloat(pas);
+			var str = "Y:"+Y;
+			$( ".position_xyz" ).text(str);
+
 		});
 		$( "#y_moins" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			Y = Y - parseFloat(pas);
-			if(Y >= 0 && Y <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str); 
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+			send(octopi_server+'jogY/'+ -parseFloat(pas));
+
+			Y = "-" + parseFloat(pas);
+			var str = "Y:"+Y;
+			$( ".position_xyz" ).text(str); 
+
 		});
 		$( "#house_xy" ).click(function(){
-			X = 0; Y = 0; 
-			var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			$( ".position_xyz" ).text(str); 
-			// TODO: Envoyer la commande "jog"
-			send(octopi_server+'homeXY','');
+			send(octopi_server+'homeXY');
+
+			var str = "Home XY";
+			$( ".position_xyz" ).text(str);
+			
 		});
 		$( "#house_z" ).click(function(){
-			Z = 0; 
-			var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			$( ".position_xyz" ).text(str); 
-			// TODO: Envoyer la commande "jog"
-			send(octopi_server+'homeZ','');
+			send(octopi_server+'homeZ');
+
+			var str = "Home Z";
+			$( ".position_xyz" ).text(str);
+			
 		});
 		$( "#z_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			Z = Z + parseFloat(pas);
-			if( Z >= 0 && Z <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str); 
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+			send(octopi_server+'jogZ/'+parseFloat(pas));
+
+			Z = "+" + parseFloat(pas);
+			var str = "Z:"+Z;
+			$( ".position_xyz" ).text(str);
+
 		});
 		$( "#z_moins" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
-			Z = Z - parseFloat(pas);
-			if(Z >= 0 && Z <= XMax){
-			        var str = "X:"+X+" | Y:"+Y+" | Z:"+Z;
-			        $( ".position_xyz" ).text(str); 
-			        // TODO: Envoyer la commande "jog"
-			        send(octopi_server+'jog/'+X+'/'+Y+'/'+Z,'');
-			}
+			send(octopi_server+'jogZ/'+ -parseFloat(pas));
+
+			Z = "-" + parseFloat(pas);
+			var str = "Z:"+Z;
+			$( ".position_xyz" ).text(str);
+
 		});
 		
 		/*****************************************************************/
@@ -348,10 +336,10 @@ $(document).ready(function(){
 		$( "#slideThree" ).click(function(){
 	        if($("#slideThree").is(':checked')){
                 console.log("switch led on");
-                send(octopi_server+'switch/on','');
+                send(octopi_server+'switch/on');
 	        }else{
                 console.log("switch led off");
-                send(octopi_server+'switch/off','');
+                send(octopi_server+'switch/off');
 	        }			
 		});
 		
@@ -390,12 +378,12 @@ $(document).ready(function(){
 		//Shutdown
 		$('#btn_shutdown').on('click', function () {			
 			console.log("extinction des feux !");
-			send(octopi_server+'stop','');
+			send(octopi_server+'stop');
 		});
 		//Reboot
 		$('#btn_reboot').on('click', function () {			
 			console.log("extinction des feux !");
-			send(octopi_server+'reboot','');
+			send(octopi_server+'reboot');
 		});
 
 		/*****************************************************************/
@@ -407,13 +395,46 @@ $(document).ready(function(){
 		    xmlhttp = new XMLHttpRequest();
 		}
 		
-		function send(url, value)
+		function send(url)
 		{
-			if(value == ''){
-				xmlhttp.open("GET", url, true);
-			}else{
-				xmlhttp.open("GET", url +"?value=" + value, true);
-			}
+			xmlhttp.open("GET", url, true);
+			xmlhttp.onreadystatechange = function (aEvt) {
+	              if (xmlhttp.readyState == 4) {
+	                 if(xmlhttp.status == 200){
+	                 	var response = xmlhttp.responseText;
+	                 	try{
+	                 		var json_response = JSON.parse(response);
+	                 	}catch(e){
+	                 		console.log("Fichier n'est pas au format Json");
+	                 	}
+	             		//console.log(JSON.stringify(json_response));
+	             		var tab_files = json_response["files"];
+	             		var files_view = $("#list_imgs ul");
+						var elt = $("#list_imgs ul li");
+
+						var new_elt = "";
+
+	             		if(tab_files != null){
+	             			console.log("liste des fichiers imprimables");
+	             			elt.remove(); //Retirer les précédents elts
+
+		             		for (var i = tab_files.length - 1; i >= 0; i--) {
+		             			console.log(tab_files[i]["name"]);
+
+		             			var taille = tab_files.length*66;
+		             			new_elt += '<li class="mod img_item"><div class="fl" style=""></div><p class="mod ptm pls prs">'+tab_files[i]["name"]+'</p></li>';
+		             			files_view.css("height", taille+"px"); //Redimentionner la vue
+		             			//files_view.prepend(new_elt); // Ajouter le nouvel elt
+		             		};
+
+		             		files_view.html(new_elt);
+	             		}
+
+	                 }else{
+	                  console.log("Erreur pendant le chargement de la page.\n");
+	                 }
+	              }
+            };
 			xmlhttp.send();
 		}
 

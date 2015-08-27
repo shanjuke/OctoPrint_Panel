@@ -30,11 +30,23 @@ def reboot():
     f.reboot()
     return "reboot"
 
-# Jog axis to x, y, z position
-@app.route('/jog/<x>/<y>/<z>')
-def jog(x, y, z):
-    f.jog(x, y, z)
-    return "X : "+x+", Y: "+y+", Z: "+z
+# Jog X axis
+@app.route('/jogX/<x>')
+def jogX(x):
+    f.jogX(x)
+    return "X : "+x
+
+# Jog Y axis  
+@app.route('/jogY/<y>')
+def jogY(y):
+    f.jogY(y)
+    return "Y : "+y 
+
+# Jog Z axis  
+@app.route('/jogZ/<z>')
+def jogZ(z):
+    f.jogZ(z)
+    return "X : "+z 
 
 # Set z axis to 0   
 @app.route('/homeZ')
@@ -48,16 +60,29 @@ def homeXY():
     f.home_xy()
     return "home xy"
 
-# Switch on or off leds
-@app.route('/switch/<state>')
-def switch(state):
-    f.switch(state)
-    return "switch "+state
-    
+#Heat to the extruder or the bed to the given temperature
+@app.route('/temperature/<obj>/<value>')
+def set_temperature(obj='0', value='0'):
+    response = ""
+    if (obj == "bed"):
+        f.bed(value)
+    elif (obj == "extruder"):
+        f.extruder(value)
+    else:
+        response = "This command isn't implemented !"
+
+    return response
+
+# Get machine list of files...
+@app.route('/files')
+def get_files():
+    datas = f.get_files()
+    return datas
+
 # Start printing the object 
-@app.route('/start_print')
-def start_print():
-    f.start_print()
+@app.route('/print/<filename>')
+def start_print(filename):
+    f.start_print(filename)
     return "print !"
 
 # Cancel the printing of the object     
@@ -78,18 +103,15 @@ def resume():
     f.pause()
     return "resume !"
 
+
+
+
 # Get machine state...
 @app.route('/state/<type>')
 def state(type):
     datas = f.state(type)                
     return datas
 
-# Get machine list of files...
-@app.route('/files')
-def get_files():
-    datas = f.get_files()                
-    return datas
-    
 @app.route('/change_filament', methods=['GET'])
 def change_filament(self, value='nothing'):
     return "change_filament !"
@@ -98,14 +120,16 @@ def change_filament(self, value='nothing'):
 def set_speed(self, value='0'):
     return "set speed to " + value
 
-@app.route('/set_temperature', methods=['GET'])
-def set_temperature(self, value='0'):
-    return "set temp to " + value
-    
-    
-    
+# Switch on or off leds
+@app.route('/switch/<state>')
+def switch(state):
+    f.switch(state)
+    return "switch "+state
+
+
 
 if __name__ == '__main__':
     print ("Démarrage du serveur pour panel ...")
     f = Fonctions(host, octopi_port)
+#    f = Fonctions("192.168.0.31", 5000)
     app.run(host=host, port=port)
