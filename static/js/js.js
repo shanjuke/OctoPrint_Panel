@@ -1,4 +1,10 @@
 $(document).ready(function(){
+		// Onload function
+		//window.onload = function(){ $( "#load" ).css("display","block"); };
+		//$(window).load(function() { $( "#load" ).css("display","block"); });
+		//$(window).ready(function() { $( "#load" ).css("display","none"); });
+		//window.DOMContentLoaded = function(){ $( "#load" ).css("display","none"); };
+		
 		// Valeurs possibles de la variable menu: 
 		//home, fichiers, detail, impression, filaments, infos, xyz, parametres	 
 		var menu = "home"; 
