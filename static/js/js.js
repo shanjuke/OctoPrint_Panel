@@ -1,255 +1,185 @@
 $(document).ready(function(){
-		// Valeurs possibles de la variable menu: 
-		//home, fichiers, detail, impression, filaments, infos, xyz, parametres	 
-		var menu = "home"; 
-		
-		// Pages de l'application
-		var pages = ['menu'];
-		pages.push('extinction');
-		pages.push('list_imgs');
-		pages.push('img_detail');
-		pages.push('heating_block');
-		pages.push('printing_block');
-		pages.push('filament_menu');
-		pages.push('remove_filament');
-		pages.push('infos_menu');
-		pages.push('xyz_menu');
-		pages.push('parametres_menu');
 
-		//1.Gestion du menu
-		$( "#btn_home" ).click(function(){
+        // Basic parameters : Set the carousel
+		var owl = $("#owl-demo");
+		var owl_car;
 
+	    owl.owlCarousel({
+	        navigation : false,
+	        singleItem : true,
+	        mouseDrag : false,
+	        touchDrag : false,
+	        pagination : false,
+	        transitionStyle : "backSlide"
+	    });
+
+	    owl_car = $("#owl-demo").data('owlCarousel');
+
+        /************************************************/
+        // Global parameters & functions:
+        // Valeurs possibles de la variable menu:
+		//home, fichiers, detail, impression, filaments, infos, xyz, parametres
+		var menu = "home";
+
+        $( "#btn_home" ).click(function(){
+		    //Gestion du menu
 			if(menu == "home"){
 				window.location.reload();
-
-			} else if(menu == "fichiers"){
-				go_backward("list_imgs", "menu", "HOME", "menu", true);
-
-			} else if(menu == "detail" || menu == "impression"){
-				go_backward("img_detail", "list_imgs", "Fichiers", "fichiers", false);
-
-				if(menu == "impression"){
-					$( "#printing_block" ).css("left","311px");
-					$( "#printing_block" ).css("display","none");
-					
-					$( "#heating_block" ).css("left","311px");
-					$( "#heating_block" ).css("display","none");
-				}
-
-			} else if(menu == "filaments" ){
-				go_backward("filament_menu", "menu", "HOME", "home", true);
-
-				$( "#remove_filament" ).css("left","311px");
-				$( "#remove_filament" ).css("display","none");
-
-			} else if(menu == "infos" ){
-				go_backward("infos_menu", "menu", "HOME", "home", true);
-
-			} else if(menu == "xyz" ){
-				go_backward("xyz_menu", "menu", "HOME", "home", true);
-
-			} else if(menu == "parametres" ){
-				go_backward("parametres_menu", "menu", "HOME", "home", true);
-
+			} else {
+				owl_car.goTo(0);
+                refresh_navbar(true, "");
 			}
-			
-		});
-
-		//2.Imprimer
-		//...
-		var freq = 1000;
-		var url = octopi_server+'state/all';
-		var repeat;
-
-		var print_progression = $("#print_progression");
-		var time_left = $("#time_left");
-		var printing_name = $("#printing_name");
-
-		var progression = 0;
-
-		//Menu
-		$( "#print" ).click(function(){
-			go_forward("menu", "list_imgs", "Fichiers", "fichiers", true);
-			//TODO: Demander la liste des fichiers disponibles
-			send(octopi_server+'files');
-		});
-		//Liste
-		$( ".img_item" ).click(function(){
-			go_forward("list_imgs", "img_detail", "Lego", "detail", false);
-		});
-		//Lancer impression
-		$('#btn_imprimer').on('click', function () {
-		    //TODO: Send command to start the print
-		    send(octopi_server+'start_print');
-		    
-		    go_forward("img_detail", "heating_block", null, null, false);
-			
-			//TODO: envoyer la commande "chauffer les buses et le plateau"
-			setTimeout(function(){ 
-
-				$( "#heating_block" ).animate(
-					{ "left": "-=320px" }, 
-					"easeOutBounce", 
-					function(){ 
-						$( "#heating_block" ).css("display","none"); 
-						$( "#printing_block" ).css("display","block"); 
-						$( "#printing_block" ).animate({ "left": "-=311px" },"fast");
-						//TODO: afficher les paramètres d'impression
-						$( "#en_cours" ).css("display","inline"); 
-					}
-				);
-
-			 }, 3000);
-
-			//Acquition des paramètres de l'imprimante
-			repeat = setInterval(function(){		        
-		        xmlhttp.open("GET", url, true);
-		        xmlhttp.onreadystatechange = function (aEvt) {
-		              if (xmlhttp.readyState == 4) {
-		                 if(xmlhttp.status == 200){
-		                 	var response = xmlhttp.responseText;
-		                 	try{
-		                 		var json_response = JSON.parse(response);
-		                 	}catch(e){
-		                 		console.log("Fichier n'est pas au format Json");
-		                 	}
-		             		//console.log(JSON.stringify(json_response));
-		             		print_progression.text(progression+"%");
-		             		time_left.text(json_response[1]["progress"]["printTimeLeft"]+"mn");
-		             		printing_name.text(json_response[1]["job"]["file"]["name"]);
-
-		             		console.log("print_progression :"+ progression);
-		             		console.log("time_left :"+ json_response[1]["progress"]["printTimeLeft"]);
-		             		console.log("printing_name :"+ json_response[1]["job"]["file"]["name"]);
-
-		                 }else{
-		                  console.log("Erreur pendant le chargement de la page.\n");
-		                 }
-		              }
-	            };
-		        xmlhttp.send();		        
-			
-			}, freq);
 
 		});
 
-		//Revenir à l'impression
-		$('#en_cours').on('click', function(){
-			refresh();
-
-			// Afficher la page d'impression
-			$( "#printing_block" ).css("display","block");
-			$( "#printing_block" ).css("left","0");
-
-			$( "#btn_home" ).animate(
-				{ "left": "-=100px" }, 
-				"easeOutBounce", 
-				function(){ 
-					$( "#btn_home" ).css("left","0"); 
-					$( "#btn_home_title" ).text("Impression"); 
-					$( "#btn_home .glyphicon" ).removeClass("glyphicon-home");
-					$( "#btn_home .glyphicon" ).addClass("glyphicon-chevron-left");
-					menu = "impression";
-				}
-			);
-
+	    $( "#print" ).click(function(){
+			owl_car.goTo(1);
+			menu = "fichiers";
+			refresh_navbar(false, "Impression");
+			//send(octopi_server+'files');
 		});
-
-		//Arrêter l'impression
-		$('#btn_arreter').on('click', function(){
-			console.log("annuler l'impression !");
-		    send(octopi_server+'cancel');
-			stop_printing();
-		});
-		
-		//Mettre l'impression en pause 
-		$('#btn_pause').on('click', function () {
-			console.log("impression sous pause !");	
-			send(octopi_server+'pause');		
-		});
-		
-		//Reprendre l'impression 
-		$('#btn_pause_continuer').on('click', function () {
-			console.log("reprise de l'impression !");
-			send(octopi_server+'resume');			
-		});
-		
-		//Arrêter l'impression après la pause
-		$('#btn_pause_arreter').on('click', function () {
-			console.log("annuler l'impression !");
-			send(octopi_server+'cancel');
-			stop_printing();
-		});
-		
-		/*****************************************************************/
-		//3.Filament
-		//Menu
 		$( "#filament" ).click(function(){
-			go_forward("menu", "filament_menu", "Filaments", "filaments", true);
+			owl_car.goTo(4);
+			menu = "filaments";
+			refresh_navbar(false, "Filament");
 		});
-		//
-		$( ".filament_item" ).click(function(){
-			go_forward("filament_menu", "heating_block", null, null, false);
-
-			//TODO: Remplacer par la commande chauffer les buses
-			setTimeout(function(){ 
-
-				$( "#heating_block" ).animate(
-					{ "left": "-=320px" }, 
-					"easeOutBounce", 
-					function(){ 
-						$( "#heating_block" ).css("display","none"); 
-						$( "#remove_filament" ).css("display","block"); 
-						$( "#remove_filament" ).animate({ "left": "-=311px" },"fast");
-					}
-				);
-
-			}, 3000);
-			
+		$( "#settings" ).click(function(){
+			owl_car.goTo(8);
+			menu = "parametres";
+			refresh_navbar(false, "Settings");
 		});
-		
-		$( "#btn_remove_filament" ).click(function(){
-			
-			$( "#btn_home" ).animate(
-				{ "left": "-=100px" }, 
-				"slow", 
-				function(){ 
-					$( "#btn_home" ).css("left","0"); 
-					$( "#btn_home_title" ).text("HOME");  
-					$( "#btn_home .glyphicon" ).removeClass("glyphicon-chevron-left");
-					$( "#btn_home .glyphicon" ).addClass("glyphicon-home");
-					menu = "home"
-				}
-			);
-
-			$( "#filament_menu" ).css("left","311px");
-			$( "#filament_menu" ).css("display","none");
-			$( "#remove_filament" ).css("left","311px");
-			$( "#remove_filament" ).css("display","none");
-			$( "#menu" ).css("display","block");
-			$( "#menu" ).css("left","0");
-			
-			
-		});
-		
-		/*****************************************************************/
-		//4.Infos
-		//Menu
-		$( "#infos" ).click(function(){
-			go_forward("menu", "infos_menu", "Infos", "infos", true);
-		});
-		
-		/*****************************************************************/
-		//5. X,Y,Z
-		//Menu
 		$( "#xyz" ).click(function(){
-			go_forward("menu", "xyz_menu", "X,Y,Z", "xyz", true);
+			owl_car.goTo(7);
+			menu = "xyz";
+			refresh_navbar(false, "Jog");
+		});
+		$( "#infos" ).click(function(){
+			owl_car.goTo(6);
+			menu = "infos";
+			refresh_navbar(false, "Infos");
 		});
 
-		//Gestion des boutons
-		var X = 0; var Y = 0; var Z = 0;
+		$('#btn_shutdown').on('click', function () {
+			console.log("extinction des feux !");
+			send(octopi_server+'stop');
+		});
+		$('#btn_reboot').on('click', function () {
+			console.log("extinction des feux !");
+			send(octopi_server+'reboot');
+		});
+
+		/************************************************/
+		//Printing menu:
+        $( ".img_item" ).click(function(){
+			owl_car.goTo(2);
+		});
+		$( "#btn_imprimer" ).click(function(){
+			owl_car.goTo(10);
+			//TODO: Put the machine on heat mode
+			setTimeout(function(){ 
+				owl_car.goTo(3);
+				$('#en_cours').css("display","inline"); //Afficher la notification
+			 }, 3000);
+			 //send(octopi_server+'start_print');
+			 //checkStatus();  // Request the server for printing infos
+
+		});
+		$( "#btn_arreter" ).click(function(){
+			owl_car.goTo(1);
+			refresh_navbar(false, "Impression");
+			$('#en_cours').css("display","none"); //Supprimer la notification
+			//TODO: Stop the printing operation
+
+			//stop_printing();  // stop Request the server for printing infos
+		});
+		$( "#btn_pause_arreter" ).click(function(){
+			owl_car.goTo(1);
+			refresh_navbar(false, "Impression");
+			$('#en_cours').css("display","none"); //Supprimer la notification
+            //TODO: Stop the printing operation
+
+            //stop_printing();  // stop Request the server for printing infos
+		});
+		$( "#btn_pause_continuer" ).click(function(){
+			//TODO: Restart the printing operation
+		});
+		$('#en_cours').click(function(){
+		    //Revenir à l'impression
+			owl_car.goTo(3);
+			refresh_navbar(false, "Impression");
+			menu = "fichiers";
+		});
+
+		/*************************************************/
+		//Filament menu:
+		$( ".filament_item" ).click(function(){
+			owl_car.goTo(10);
+			//TODO: Put the machine on heat mode
+			setTimeout(function(){ 
+				owl_car.goTo(5);
+			 }, 3000);
+		});
+		$( "#btn_remove_filament" ).click(function(){
+			owl_car.goTo(0);
+			refresh_navbar(true, "");
+		});
+
+        /*************************************************/
+        //Settings menu:
+
+		var pas_temperature = 1; var pas_vitesse = 10;
+		var temp_value_init = 10; var vit_value_init = 20;
+		var temp_value = $( "#temperature_value" );
+		var vit_value = $( "#vitesse_value" );
+
+		temp_value.text(temp_value_init + "°");
+		vit_value.text(vit_value_init);
+
+		$( "#slideThree" ).click(function(){
+	        if($("#slideThree").is(':checked')){
+                console.log("switch led on");
+                send(octopi_server+'switch/on');
+	        }else{
+                console.log("switch led off");
+                send(octopi_server+'switch/off');
+	        }
+		});
+
+		$( "#btn_vitesse_moins" ).click(function(){
+			console.log("value "+ vit_value.val());
+			var str = $( "#vitesse_value" ).val() - pas_vitesse;
+			console.log("str " + str);
+			vit_value.text(str+"m/s");
+		});
+
+		$( "#btn_vitesse_plus" ).click(function(){
+			console.log("value "+ vit_value.val());
+			var str = $( "#vitesse_value" ).val() + pas_vitesse;
+			console.log("str " + str);
+			vit_value.text(str+"m/s");
+		});
+
+		$( "#btn_vitesse_valider" ).click(function(){
+
+		});
+
+		$( "#btn_temperature_moins" ).click(function(){
+
+		});
+
+		$( "#btn_temperature_plus" ).click(function(){
+
+		});
+
+		$( "#btn_temperature_valider" ).click(function(){
+
+		});
+
+		/*************************************************/
+        //XYZ menu:
+        var X = 0; var Y = 0; var Z = 0;
 		var XMax = 300; var YMax = 300; var ZMax = 300;
-		
+
 		$( "#x_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
 	        send(octopi_server+'jogX/'+parseFloat(pas));
@@ -266,7 +196,7 @@ $(document).ready(function(){
 			X = "-" + parseFloat(pas);
 			var str = "X:"+X;
 			$( ".position_xyz" ).text(str);
-			
+
 		});
 		$( "#y_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
@@ -283,7 +213,7 @@ $(document).ready(function(){
 
 			Y = "-" + parseFloat(pas);
 			var str = "Y:"+Y;
-			$( ".position_xyz" ).text(str); 
+			$( ".position_xyz" ).text(str);
 
 		});
 		$( "#house_xy" ).click(function(){
@@ -291,14 +221,14 @@ $(document).ready(function(){
 
 			var str = "Home XY";
 			$( ".position_xyz" ).text(str);
-			
+
 		});
 		$( "#house_z" ).click(function(){
 			send(octopi_server+'homeZ');
 
 			var str = "Home Z";
 			$( ".position_xyz" ).text(str);
-			
+
 		});
 		$( "#z_plus" ).click(function(){
 			var pas = $( ".selectpicker" ).val();
@@ -318,241 +248,165 @@ $(document).ready(function(){
 			$( ".position_xyz" ).text(str);
 
 		});
-		
-		/*****************************************************************/
-		//6.Paramètres
-		$( "#settings" ).click(function(){
-			go_forward("menu", "parametres_menu", "Paramètres", "parametres", true);
-		});
-		
-		var pas_temperature = 1; var pas_vitesse = 10;
-		var temp_value_init = 10; var vit_value_init = 20;
-		var temp_value = $( "#temperature_value" );
-		var vit_value = $( "#vitesse_value" );
-		
-		temp_value.text(temp_value_init + "°");
-		vit_value.text(vit_value_init);
-		
-		$( "#slideThree" ).click(function(){
-	        if($("#slideThree").is(':checked')){
-                console.log("switch led on");
-                send(octopi_server+'switch/on');
-	        }else{
-                console.log("switch led off");
-                send(octopi_server+'switch/off');
-	        }			
-		});
-		
-		$( "#btn_vitesse_moins" ).click(function(){
-			console.log("value "+ vit_value.val());
-			var str = $( "#vitesse_value" ).val() - pas_vitesse;
-			console.log("str " + str);
-			vit_value.text(str+"m/s");
-		});
-		
-		$( "#btn_vitesse_plus" ).click(function(){
-			console.log("value "+ vit_value.val());
-			var str = $( "#vitesse_value" ).val() + pas_vitesse;
-			console.log("str " + str);
-			vit_value.text(str+"m/s");
-		});
-		
-		$( "#btn_vitesse_valider" ).click(function(){
-			
-		});
-		
-		$( "#btn_temperature_moins" ).click(function(){
-			
-		});
-		
-		$( "#btn_temperature_plus" ).click(function(){
-			
-		});
-		
-		$( "#btn_temperature_valider" ).click(function(){
-			
-		});
-
-		/*****************************************************************/
-		//7.Eteindre la machine
-		//Shutdown
-		$('#btn_shutdown').on('click', function () {			
-			console.log("extinction des feux !");
-			send(octopi_server+'stop');
-		});
-		//Reboot
-		$('#btn_reboot').on('click', function () {			
-			console.log("extinction des feux !");
-			send(octopi_server+'reboot');
-		});
 
 		/*****************************************************************/
 		//Fonctions principales
 		var xmlhttp;
 		var octopi_server = "http://0.0.0.0:4000/";
-		
+
+		//Check status parameters
+		var freq = 1000;
+		var url = octopi_server+'state/all';
+		var repeat;
+
+		var print_progression = $("#print_progression");
+		var time_left = $("#time_left");
+		var printing_name = $("#printing_name");
+
+		var progression = 0;
+
 		if (window.XMLHttpRequest){ 
 		    xmlhttp = new XMLHttpRequest();
 		}
-		
+
+        function getJSON(response){
+            try{
+            	//console.log(response);
+                var json_response = JSON.parse(response);
+                //tab_files = json_response["files"];
+                //return tab_files;
+                //return JSON.stringify(json_response);
+                return json_response;
+            }catch(e){
+                console.log("Le fichier n'est pas au format Json");
+            }
+        }
+
+        function setFiles(json){
+            var files_view = $("#list_imgs ul");
+			var elt = $("#list_imgs ul li");
+			var new_elt = "";
+			var taille = 0;
+
+			console.log("liste des fichiers imprimables");
+            elt.remove(); //Retirer les précédents elts
+
+            for (var i = json.length - 1; i >= 0; i--) {
+                console.log(json[i]["name"]);
+
+                taille = json.length*66;
+                new_elt += '<li class="mod img_item">'
+                                +'<div class="fl" style=""></div>'
+                                +'<p class="mod ptm pls prs">'+json[i]["name"]+'</p>'
+                           +'</li>';
+                files_view.css("height", taille+"px"); //Redimentionner la vue
+                //files_view.prepend(new_elt); // Ajouter le nouvel elt
+            };
+
+            files_view.html(new_elt);
+        }
+
+		function setInfos(json){
+			var ip = $("#ip");
+			var ap = $("#ap");
+			var firmware = $("#firmware");
+			var version_bmk = $("#version_bmk");
+			var tps = $("#tps");
+
+			ip.html(json.ip);
+			ap.html(json.ap);
+			firmware.html(json.firmware);
+			version_bmk.html(json.version_bmk);
+			tps.html(json.tps);
+		}
+		//Send command to the octoprint server
+		send('http://127.0.0.1:4000/files'); //Get all printable files
+		send('http://127.0.0.1:4000/infos'); //Get general infos
 		function send(url)
 		{
+			var tab_files;
+
 			xmlhttp.open("GET", url, true);
 			xmlhttp.onreadystatechange = function (aEvt) {
-	              if (xmlhttp.readyState == 4) {
-	                 if(xmlhttp.status == 200){
-	                 	var response = xmlhttp.responseText;
-	                 	try{
-	                 		var json_response = JSON.parse(response);
-	                 	}catch(e){
-	                 		console.log("Fichier n'est pas au format Json");
-	                 	}
-	             		//console.log(JSON.stringify(json_response));
-	             		var tab_files = json_response["files"];
-	             		var files_view = $("#list_imgs ul");
-						var elt = $("#list_imgs ul li");
+                  if (xmlhttp.readyState == 4) {
 
-						var new_elt = "";
+                     if(xmlhttp.status == 200){
 
-	             		if(tab_files != null){
-	             			console.log("liste des fichiers imprimables");
-	             			elt.remove(); //Retirer les précédents elts
+                        tab_files = getJSON(xmlhttp.responseText);
+                        //console.log(tab_files);
 
-		             		for (var i = tab_files.length - 1; i >= 0; i--) {
-		             			console.log(tab_files[i]["name"]);
+                        if(tab_files.files && tab_files.files != ""){
+                        	console.log("files received !" + tab_files);
+                            setFiles(tab_files.files);
+                        }else if(tab_files.ip){
+							console.log("infos !" + tab_files);
+							setInfos(tab_files);
+                        }
 
-		             			var taille = tab_files.length*66;
-		             			new_elt += '<li class="mod img_item"><div class="fl" style=""></div><p class="mod ptm pls prs">'+tab_files[i]["name"]+'</p></li>';
-		             			files_view.css("height", taille+"px"); //Redimentionner la vue
-		             			//files_view.prepend(new_elt); // Ajouter le nouvel elt
-		             		};
-
-		             		files_view.html(new_elt);
-	             		}
-
-	                 }else{
-	                  console.log("Erreur pendant le chargement de la page.\n");
-	                 }
-	              }
+                     }else{
+                      console.log("Erreur pendant le chargement de la page.\n");
+                     }
+                  }
             };
 			xmlhttp.send();
 		}
 
-		// Avancer dans le menu...
-		function go_forward(page, suivante, titre, titre_page_suivante, from_home){
-			// Changement de Page
-			$( "#"+page+"" ).animate(
-				{ "left": "-=320px" }, 
-				"fast", 
-				function(){ 
-					$( "#"+page+"" ).css("display","none"); 
-					$( "#"+suivante+"" ).css("display","block"); 
-					$( "#"+suivante+"" ).animate({ "left": "-=311px" },"fast");
-				}
-			);
-			// Bouton retour
-			if(titre != null && titre_page_suivante != null){
-				$( "#btn_home" ).animate(
-					{ "left": "-=100px" }, 
-					"fast", 
-					function(){ 
-						$( "#btn_home" ).css("left","0"); 
-						$( "#btn_home_title" ).text(titre); 
-						if(from_home){
-							$( "#btn_home .glyphicon" ).removeClass("glyphicon-home");
-							$( "#btn_home .glyphicon" ).addClass("glyphicon-chevron-left");
-						}
-						menu = titre_page_suivante;
-						
-					}
-				);		
-			}
-
-		};
-
-		// Reculer dans le menu...
-		function go_backward(page, precedente, titre, titre_page_precedente, to_home){
-			// Mise à jour du btn_home
-				$( "#btn_home" ).animate(
-					{ "left": "-=100px" }, 
-					"slow", 
-					function(){ 
-						$( "#btn_home" ).css("left","0"); 
-						$( "#btn_home_title" ).text(titre);
-						if(to_home){
-							$( "#btn_home .glyphicon" ).removeClass("glyphicon-chevron-left");
-							$( "#btn_home .glyphicon" ).addClass("glyphicon-home");
-						}
-						menu = titre_page_precedente
-					}
-				);
-
-				$( "#"+page+"" ).css("left","311px");
-				$( "#"+page+"" ).css("display","none");
-				$( "#"+precedente+"" ).css("display","block");
-				$( "#"+precedente+"" ).css("left","0");
-		};
-
-		// Remise à zéro de tous les menus
-		function refresh(){
-			//Refresh - Remettre tous les blocks à droite et invisible
-			for(var id in pages){
-				var encre = "#"+pages[id]+"";
-				//console.log(encre);
-				$( encre ).css("display","none");
-				$( encre ).css("left","311px");
+        //Refresh the navbar
+        function refresh_navbar(home, title){
+			if(home){
+			    $( "#btn_home_title" ).text("Home");
+				$( "#btn_home .glyphicon" ).removeClass("glyphicon-chevron-left");
+				$( "#btn_home .glyphicon" ).addClass("glyphicon-home");
+				menu = "home";
+			}else{
+			    $( "#btn_home_title" ).text(title);
+				$( "#btn_home .glyphicon" ).removeClass("glyphicon-home");
+				$( "#btn_home .glyphicon" ).addClass("glyphicon-chevron-left");
 			}
 		};
-		//fonction arrêter
+
+        //Check status function
+        function checkStatus(){
+            //Acquition des paramètres de l'imprimante
+            repeat = setInterval(function(){
+                       xmlhttp.open("GET", url, true);
+                       xmlhttp.onreadystatechange = function (aEvt) {
+                           if (xmlhttp.readyState == 4) {
+                              if(xmlhttp.status == 200){
+                              	var response = xmlhttp.responseText;
+                              	try{
+                              		var json_response = JSON.parse(response);
+                              	}catch(e){
+                              		console.log("Fichier n'est pas au format Json");
+                              	}
+                          		//console.log(JSON.stringify(json_response));
+                          		print_progression.text(progression+"%");
+                          		time_left.text(json_response[1]["progress"]["printTimeLeft"]+"mn");
+                          		printing_name.text(json_response[1]["job"]["file"]["name"]);
+
+                         		console.log("print_progression :"+ progression);
+                         		console.log("time_left :"+ json_response[1]["progress"]["printTimeLeft"]);
+                          		console.log("printing_name :"+ json_response[1]["job"]["file"]["name"]);
+
+                              }else{
+                               console.log("Erreur pendant le chargement de la page.\n");
+                              }
+                           }
+                       };
+
+                       xmlhttp.send();
+
+            }, freq);
+
+        }
+
+        //Cancel the checkStatus function
 		function stop_printing(){
 			//Arret du recueil d'infos 
 			clearInterval(repeat);
 
-			// On efface les notification
-			$('#en_cours').css("display","none");
-
-			$( "#content" ).animate(
-				{ "top": "=190px" }, 
-				"easeOutBounce", 
-				function(){ 
-					$( "#content" ).css("display","none"); 
-					$( "#content_cancel" ).css("display","block"); 
-					$( "#content_cancel" ).animate({ "top": "=0" },"fast");
-				}
-			);
-			
-			setTimeout(function(){ 
-
-				$( "#printing_block" ).animate(
-					{ "left": "=311px" }, 
-					"easeOutBounce", 
-					function(){ 
-						$( "#printing_block" ).css("display","none"); 
-						//$( "#printing_block" ).css("left","311px");
-						$( "#list_imgs" ).css("display","block"); 
-						$( "#list_imgs" ).css("left","0");
-					}
-				);
-				
-				$( "#btn_home" ).animate(
-					{ "left": "-=100px" }, 
-					"easeOutBounce", 
-					function(){ 
-						$( "#btn_home" ).css("left","0"); 
-						$( "#btn_home_title" ).text("Fichiers");  
-						$( "#btn_home .glyphicon" ).removeClass("glyphicon-home");
-						$( "#btn_home .glyphicon" ).addClass("glyphicon-chevron-left");
-						menu = "fichiers";
-					}
-				);
-				
-			 }, 2000);
 		};
-		
-		//fonction reprendre impression
-		function resume_printing(){
-		
-		};
+
 		
 		// Calculer le pourcentage de progression
 		function progression(timeLeft, time){

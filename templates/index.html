@@ -1,344 +1,375 @@
-<!DOCTYPE html/>
-<html>
-	<head>
-		<meta charset="UTF-8"></meta>
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/knacss.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.4-dist/css/bootstrap.min.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-		<script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='bootstrap-3.3.4-dist/js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/js.js') }}"></script>
-	</head>
-	<body>
-		<header class="pas">
-			<div id="btn_home" class="w100p left inbl">
-				<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-				<p id="btn_home_title" class="mb0 inbl">HOME</p>
-			</div>
-			<div id="en_cours" class="right inbl mrs">
-			        <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-				<p id="print_progression" class="mb0 inbl">68%</p>
-				<span class="glyphicon glyphicon-hourglass mls" aria-hidden="true"></span>
-				<p id="time_left" class="mb0 inbl">30mn</p>
-			</div>
-		</header>
-		<!-- 1. Menu principal -->
-		<ul id="menu">
-		    <li id="print" class="pas item inbl">
-				<span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> Imprimer </span>			
-		    </li>
-		    <li id="filament" class="pas item inbl">
-				<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> filaments </span>
-		    </li>
-		    <li id="settings" class="pas item inbl">
-				<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> Paramètres </span>
-		    </li>
-		    <li id="xyz" class="pas item inbl">
-				<span class="glyphicon glyphicon-move" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> X,Y,Z </span>
-		    </li>
-		    <li id="infos" class="pas item inbl">
-				<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> Infos </span>
-		    </li>
-		    <li class="pas item inbl" data-toggle="modal" data-target="#modal_shutdown">
-				<span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> Arrêt </span>
-		    </li>
-			<!-- Modal confirmer arrêt-->
-			<div class="modal fade" id="modal_shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-				<div class="modal-content mtl">
-				  <div class="modal-body">
-					<h2 class="txtcenter"> Eteindre la machine ?</h2>
-				  </div>
-				  <div class="modal-footer">
-					<button type="button" class="btn btn-default fl" data-dismiss="modal">Annuler</button>
-					<button id="btn_reboot" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
-					<button id="btn_shutdown" type="button" class="btn btn-danger" data-dismiss="modal">Eteindre</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-		</ul>
-		<div id="extinction" ></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Marco Kome">
 
-		<!-- 2. Menu liste des fichiers -->
-		<div id="list_imgs">
-			<ul class="pa0 mod" style="height: 293px;">
-			  <li class="mod img_item">
-				<div class="fl" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;"></div>
-				<p class="mod ptm pls prs">légo</p>
-			  </li>
-			  <li class="mod img_item">
-				<div class="fl" style="background: url('{{ url_for('static', filename='images/obj2.png') }}') center center /cover;"></div>
-				<p class="mod ptm pls prs">sainte mère</p>
-			  </li>
-			  <li class="mod img_item">
-				<div class="fl"></div>
-				<p class="mod ptm pls prs">img1</p>
-			  </li>
-			  <li class="mod img_item">
-				<div class="fl"></div>
-				<p class="mod ptm pls prs">img2</p>
-			  </li>
-			</ul>
-		</div>
-		<!-- 2.1 Menu détail du fichier -->
-		<div id="img_detail" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
-			<div id="img_infos" class="mod pls prs">
-				<div class="line">
-					<p class="fl mb0">Température</p>
-					<p class="fr mb0">88 deg.</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Filament</p>
-					<p class="fr mb0">ABS</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Raft</p>
-					<p class="fr mb0">NON</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Plate</p>
-					<p class="fr mb0">100 deg.</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Time</p>
-					<p class="fr mb0">25mn</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Epaisseur</p>
-					<p class="fr mb0">0,20mm</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Extruders</p>
-					<p class="fr mb0">2</p>
-				</div>
-				<button type="button" class="mts btn btn-primary" data-toggle="modal" data-target="#modal_print">Imprimer</button>
-				<!-- Modal confirmer impression -->
-				<div class="modal fade" id="modal_print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content mtl">
-				      <div class="modal-body">
-				        <h2 class="txtcenter"> Imprimer Légo ?</h2>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
-				        <button id="btn_imprimer" type="button" class="btn btn-primary" data-dismiss="modal">démarrer</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/knacss.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.4-dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-			</div>
-		</div>
-		<!-- 2.2 Heating block -->
-		<div id="heating_block">
-			<p class="heating_info line txtcenter">68%</p>
-			<p class="line txtcenter">heating...to 118°</p>
-		</div>
-		<!-- 2.3 Printing block -->
-		<div id="printing_block" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
-			<div class="film pas">
-				<div class="" id="content">
-					<p id="printing_name" class="pas txtcenter mb0" style="font-size: 1.5em;"> Légo </p>
-					<div class="progress">
-						<div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-							45% Complete...
-						</div>
-					</div>
-					<div class="w50 center">
-						<button id="btn_pause" type="button" class="fl btn btn-warning" data-toggle="modal" data-target="#modal_pause">Pause</button>
-						<button id="btn_cancel" type="button" class="fr btn btn-danger" data-toggle="modal" data-target="#modal_cancel">Annuler</button>
-					</div>
-				</div>
-				<div class="mtl" id="content_cancel">
-					<h2 class="pas txtcenter"> Impression annulée ! </h2>
-				</div>
-			</div>
-			<!-- Modal confirmer arrêt-->
-			<div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-				<div class="modal-content mtl">
-				  <div class="modal-body">
-					<h2 class="txtcenter"> Arrêter l'impression de Légo ?</h2>
-				  </div>
-				  <div class="modal-footer">
-					<button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
-					<button id="btn_arreter" type="button" class="btn btn-danger" data-dismiss="modal" >Arrêter</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-			<!-- Modal confirmer arrêt-->
-			<div class="modal fade" id="modal_pause" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-				<div class="modal-content mtl">
-				  <div class="modal-body">
-					<h2 class="txtcenter"> Impression de Légo en pause !</h2>
-				  </div>
-				  <div class="modal-footer">
-					<button id="btn_pause_arreter" type="button" class="btn btn-danger fl" data-dismiss="modal">Arrêter</button>
-					<button id="btn_pause_continuer" type="button" class="btn btn-primary" data-dismiss="modal">Continuer</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-		</div>
+    <!-- Owl Carousel Assets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='owl-carousel/owl.carousel.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='owl-carousel/owl.theme.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='owl-carousel/owl.transitions.css') }}" >
 
-		<!-- 3. Menu Changement de filament -->
-		<ul id="filament_menu">		    
-		    <li id="print" class="pas item inbl filament_item">	
-		    	<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>		
-				<span class="pas titre txtcenter"> PLA </span>			
-		    </li>
-		    <li id="filament" class="pas item inbl">
-		    	<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> ABS </span>
-		    </li>
-		    <li class="pas item inbl">
-		    	<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
-				<span class="pas titre txtcenter"> HIPS </span>
-		    </li>
-		</ul>
-		<!-- 3.1 Heating block -->
-		<!-- 3.2 Remove filament block -->
-		<div id="remove_filament">
-			<p class="heating_info line txtcenter">gif</p>
-			<p class="line txtcenter">retirez le filament...</p>			
-			<div class="w40 center">
-				<button id="btn_remove_filament" type="button" class="btn btn-primary" >filament retiré !</button>
-			</div>
-		</div>
-		
-		<!-- 4. Infos block -->
-		<div id="infos_menu">
-			<div class="film pas">
-				<div class="line">
-					<p class="fl mb0">BMK</p>
-					<p class="fr mb0">v 1.0</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Firmware</p>
-					<p class="fr mb0">Marlin</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Adresse IP</p>
-					<p class="fr mb0">192.168.0.10</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Accès wifi</p>
-					<p class="fr mb0">bipi.local</p>
-				</div>
-				<div class="line">
-					<p class="fl mb0">Temps impression</p>
-					<p class="fr mb0">6h36mn32s</p>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 5. X,Y,Z block -->
-		<div id="xyz_menu">
-			<div class="pas mod" style="background: black; color: white;">
-				<div class="fl">
-					<p class="fl mb0 mrs">Pas: </p>
-					<select class="selectpicker" title='Pas' style ="color: black;">
-						<option>0.1</option>
-						<option>1</option>
-						<option>10</option>
-						<option>100</option>
-					</select>
-				</div>
-				<p class="position_xyz txtcenter mb0 fr" >X:0 | Y:0 | Z:0</p>	
-			</div>
-			
-			<div class="pas mod">
-				<div class="pas_pas fl">
-					<div class="line txtcenter">
-						<button id="x_plus" type="button" class="btn btn-default" style="margin-bottom: 5px;">
-							<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-						</button>
-					</div>
-					<div class="line ">
-						<button id="y_moins" type="button"  class="btn btn-default">
-							<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-						</button>
-						<button id="house_xy" type="button"  class="btn btn-danger boutons">
-							<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-						</button>
-						<button id="y_plus" type="button"  class="btn btn-default">
-							<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-						</button>
-					</div>
-					<div class="line txtcenter">
-						<button id="x_moins" type="button"  class="btn btn-default" style="margin-top: 5px;">
-							<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-						</button>
-					</div>
-				</div>
-				<div class="fr" >
-					<div class="axe_z " style="height:130px; position: relative;">
-						<button id="z_plus" type="button"  class="btn btn-default">
-							<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-						</button>
-						<button id="house_z" type="button"  class="btn btn-danger boutons" style="position:absolute; top:45px; left:0;">
-							<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-						</button>
-						<button id="z_moins" type="button" style="position: absolute;  bottom:0; left:0;" class="btn btn-default">
-							<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-						</button>
-					</div>
-					<div class="control_axes fr">
-					
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 6. Paramètres block -->
-		<div id="parametres_menu" class="pas">
-			<div class="line pas pt0">
-				<p class="fl mb0 mls">Allumer les led</p>
-				<div class="slideThree fr">	
-					<input type="checkbox" value="None" id="slideThree" name="check" />
-					<label for="slideThree"></label>
-				</div>
-			</div>
-			<div class="line pas pt0">
-				<p class="fl mb0" style="display:none;">Vitesse</p>
-				<div class="fr mb0 line">
-					<button id="btn_vitesse_moins" type="button" class="btn btn-default fl boutons" >
-						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-					</button>
-					<p id="vitesse_value" class="inbl pas mb0 w100p txtcenter">10m/s</p>
-					<button id="btn_vitesse_plus" type="button" class="btn btn-default mrl boutons" >
-						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-					</button>
-					<button id="btn_vitesse_valider" type="button" class="btn btn-danger fr boutons" >
-						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-					</button>
-				</div>
-			</div>
-			<div class="line pas pt0">
-				<p class="fl mb0" style="display:none;">Température</p>
-				<div class="fr mb0">
-					<button id="btn_temperature_moins" type="button" class="btn btn-default fl boutons" >
-						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-					</button>
-					<p id="temperature_value" class="inbl pas mb0 w100p txtcenter">10</p>
-					<button id="btn_temperature_plus" type="button" class="btn btn-default mrl boutons" >
-						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-					</button>
-					<button id="btn_temperature_valider" type="button" class="btn btn-danger fr boutons" >
-						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-					</button>
-				</div>
-			</div>
-		</div>
+</head>
+<body>
+    <header class="pas">
+        <div id="btn_home" class="w100p left inbl">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            <p id="btn_home_title" class="mb0 inbl">Home</p>
+        </div>
+        <div id="en_cours" class="right inbl mrs">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+            <p id="print_progression" class="mb0 inbl">68%</p>
+            <span class="glyphicon glyphicon-hourglass mls" aria-hidden="true"></span>
+            <p id="time_left" class="mb0 inbl">30mn</p>
+        </div>
+    </header>
+    <div id="owl-demo" class="owl-carousel">
+        <!-- 1. Menu principal -->
+        <div class="item">
+            <ul id="menu">
+                <li id="print" class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> Imprimer </span>
+                </li>
+                <li id="filament" class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> filaments </span>
+                </li>
+                <li id="settings" class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> Paramètres </span>
+                </li>
+                <li id="xyz" class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-move" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> X,Y,Z </span>
+                </li>
+                <li id="infos" class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> Infos </span>
+                </li>
+                <li class="pas item-button inbl" data-toggle="modal" data-target="#modal_shutdown">
+                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> Arrêt </span>
 
-	</body>
+                    <!-- Modal confirmer arrêt-->
+                    <div class="modal fade" id="modal_shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content mts">
+                          <div class="modal-body">
+                            <h2 class="txtcenter"> Eteindre la machine ?</h2>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default fl" data-dismiss="modal">Annuler</button>
+                            <button id="btn_reboot" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
+                            <button id="btn_shutdown" type="button" class="btn btn-danger" data-dismiss="modal">Eteindre</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- 2. Menu liste des fichiers -->
+        <div class="item">
+            <div id="list_imgs">
+                <ul class="pa0 mod" style="height: 293px;">
+                  <li class="mod img_item">
+                    <div class="fl" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;"></div>
+                    <p class="mod ptm pls prs">légo</p>
+                  </li>
+                  <li class="mod img_item">
+                    <div class="fl" style="background: url('{{ url_for('static', filename='images/obj2.png') }}') center center /cover;"></div>
+                    <p class="mod ptm pls prs">sainte mère</p>
+                  </li>
+                  <li class="mod img_item">
+                    <div class="fl"></div>
+                    <p class="mod ptm pls prs">img1</p>
+                  </li>
+                  <li class="mod img_item">
+                    <div class="fl"></div>
+                    <p class="mod ptm pls prs">img2</p>
+                  </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 3. Menu détail du fichier -->
+        <div class="item">
+            <div id="img_detail" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
+                <div id="img_infos" class="mod pls prs">
+                    <div class="line">
+                        <p class="fl mb0">Température</p>
+                        <p class="fr mb0">88 deg.</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Filament</p>
+                        <p class="fr mb0">ABS</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Raft</p>
+                        <p class="fr mb0">NON</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Plate</p>
+                        <p class="fr mb0">100 deg.</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Time</p>
+                        <p class="fr mb0">25mn</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Epaisseur</p>
+                        <p class="fr mb0">0,20mm</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Extruders</p>
+                        <p class="fr mb0">2</p>
+                    </div>
+                    <button type="button" class="mts btn btn-primary" data-toggle="modal" data-target="#modal_print">Imprimer</button>
+                    <!-- Modal confirmer impression -->
+                    <div class="modal fade" id="modal_print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content mtl">
+                          <div class="modal-body">
+                            <h2 class="txtcenter"> Imprimer Légo ?</h2>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
+                            <button id="btn_imprimer" type="button" class="btn btn-primary" data-dismiss="modal">démarrer</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- 4. Printing block -->
+        <div class="item">
+            <div id="printing_block" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
+                <div class="film pas">
+                    <div class="" id="content">
+                        <p id="printing_name" class="pas txtcenter mb0" style="font-size: 1.5em;"> Légo </p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                                45% Complete...
+                            </div>
+                        </div>
+                        <div class="w50 center">
+                            <button id="btn_pause" type="button" class="fl btn btn-warning" data-toggle="modal" data-target="#modal_pause">Pause</button>
+                            <button id="btn_cancel" type="button" class="fr btn btn-danger" data-toggle="modal" data-target="#modal_cancel">Annuler</button>
+                        </div>
+                    </div>
+                    <div class="mtl" id="content_cancel">
+                        <h2 class="pas txtcenter"> Impression annulée ! </h2>
+                    </div>
+                </div>
+                <!-- Modal confirmer arrêt-->
+                <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content mtl">
+                      <div class="modal-body">
+                        <h2 class="txtcenter"> Arrêter l'impression de Légo ?</h2>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
+                        <button id="btn_arreter" type="button" class="btn btn-danger" data-dismiss="modal" >Arrêter</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal confirmer arrêt-->
+                <div class="modal fade" id="modal_pause" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content mtl">
+                      <div class="modal-body">
+                        <h2 class="txtcenter"> Impression de Légo en pause !</h2>
+                      </div>
+                      <div class="modal-footer">
+                        <button id="btn_pause_arreter" type="button" class="btn btn-danger fl" data-dismiss="modal">Arrêter</button>
+                        <button id="btn_pause_continuer" type="button" class="btn btn-primary" data-dismiss="modal">Continuer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- 5. Menu Changement de filament -->
+        <div class="item">
+            <ul id="filament_menu">
+                <li class="pas item-button inbl filament_item">
+                    <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> PLA </span>
+                </li>
+                <li class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> ABS </span>
+                </li>
+                <li class="pas item-button inbl">
+                    <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
+                    <span class="pas titre txtcenter"> HIPS </span>
+                </li>
+            </ul>
+        </div>
+        <!-- 6. Remove filament block -->
+        <div class="item">
+            <div id="remove_filament">
+                <p class="heating_info line txtcenter">gif</p>
+                <p class="line txtcenter">retirez le filament...</p>
+                <div class="w40 center">
+                    <button id="btn_remove_filament" type="button" class="btn btn-primary" >filament retiré !</button>
+                </div>
+            </div>
+        </div>
+        <!-- 7. Infos block -->
+        <div class="item">
+            <div id="infos_menu">
+                <div class="film pas">
+                    <div class="line">
+                        <p class="fl mb0">BMK</p>
+                        <p class="fr mb0" id="version_bmk">v 1.0</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Firmware</p>
+                        <p class="fr mb0" id="firmware">Marlin</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Adresse IP</p>
+                        <p class="fr mb0" id="ip">192.168.0.10</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Accès wifi</p>
+                        <p class="fr mb0" id="ap">bipi.local</p>
+                    </div>
+                    <div class="line">
+                        <p class="fl mb0">Temps impression</p>
+                        <p class="fr mb0" id="tps">6h36mn32s</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 8. X,Y,Z block -->
+        <div class="item">
+            <div id="xyz_menu">
+                <div class="pas mod" style="background: black; color: white;">
+                    <div class="fl">
+                        <p class="fl mb0 mrs">Pas: </p>
+                        <select class="selectpicker" title='Pas' style ="color: black;">
+                            <option>0.1</option>
+                            <option>1</option>
+                            <option>10</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <p class="position_xyz txtcenter mb0 fr" ></p>
+                </div>
+
+                <div class="pas mod">
+                    <div class="pas_pas fl">
+                        <div class="line txtcenter">
+                            <button id="x_plus" type="button" class="btn btn-default" style="margin-bottom: 5px;">
+                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="line ">
+                            <button id="y_moins" type="button"  class="btn btn-default">
+                                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                            </button>
+                            <button id="house_xy" type="button"  class="btn btn-danger boutons">
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                            </button>
+                            <button id="y_plus" type="button"  class="btn btn-default">
+                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="line txtcenter">
+                            <button id="x_moins" type="button"  class="btn btn-default" style="margin-top: 5px;">
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="fr" >
+                        <div class="axe_z " style="height:130px; position: relative;">
+                            <button id="z_plus" type="button"  class="btn btn-default">
+                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                            </button>
+                            <button id="house_z" type="button"  class="btn btn-danger boutons" style="position:absolute; top:45px; left:0;">
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                            </button>
+                            <button id="z_moins" type="button" style="position: absolute;  bottom:0; left:0;" class="btn btn-default">
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="control_axes fr">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 9. Paramètres block -->
+        <div class="item">
+            <div id="parametres_menu" class="pas">
+                <div class="line pas pt0">
+                    <p class="fl mb0 mls">Allumer les led</p>
+                    <div class="slideThree fr">
+                        <input type="checkbox" value="None" id="slideThree" name="check" />
+                        <label for="slideThree"></label>
+                    </div>
+                </div>
+                <div class="line pas pt0">
+                    <p class="fl mb0" style="display:none;">Vitesse</p>
+                    <div class="fr mb0 line">
+                        <button id="btn_vitesse_moins" type="button" class="btn btn-default fl boutons" >
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </button>
+                        <p id="vitesse_value" class="inbl pas mb0 w100p txtcenter">10m/s</p>
+                        <button id="btn_vitesse_plus" type="button" class="btn btn-default mrl boutons" >
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        <button id="btn_vitesse_valider" type="button" class="btn btn-danger fr boutons" >
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="line pas pt0">
+                    <p class="fl mb0" style="display:none;">Température</p>
+                    <div class="fr mb0">
+                        <button id="btn_temperature_moins" type="button" class="btn btn-default fl boutons" >
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </button>
+                        <p id="temperature_value" class="inbl pas mb0 w100p txtcenter">10</p>
+                        <button id="btn_temperature_plus" type="button" class="btn btn-default mrl boutons" >
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        <button id="btn_temperature_valider" type="button" class="btn btn-danger fr boutons" >
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 10. Heating block -->
+        <div class="item">
+            <div id="heating_block">
+                <p class="heating_info line txtcenter">68%</p>
+                <p class="line txtcenter">heating...to 118°</p>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="extinction" ></div> -->
+</body>
+<script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap-3.3.4-dist/js/bootstrap.min.js') }}"></script>
+
+<!-- Owl Carousel Assets -->
+<script src="{{ url_for('static', filename='owl-carousel/owl.carousel.js') }}"></script>
+<script src="{{ url_for('static', filename='owl-carousel/assets/js/google-code-prettify/prettify.js') }}"></script>
+<script src="{{ url_for('static', filename='owl-carousel/assets/js/application.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/js.js') }}"></script>
 </html>

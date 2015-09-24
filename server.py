@@ -103,6 +103,11 @@ def resume():
     f.pause()
     return "resume !"
 
+# Get general infos...
+@app.route('/infos')
+def get_infos():
+    datas = f.get_infos()
+    return datas
 
 
 

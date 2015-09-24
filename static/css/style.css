@@ -17,7 +17,7 @@ header{ border-bottom: 1px solid white; }
 	height: 240px; 
 	display:none; 
 }
-.item { width: 100px; height: 100px; position:relative;}
+.item-button { width: 100px; height: 100px; position:relative;}
 li:hover, li:active{ background-color: rgb(27, 84, 112);}
 .titre { position: absolute; bottom:0; left:0; right:0;}
 
@@ -27,8 +27,8 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 	height: 240px; 
 	overflow: auto; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 #list_imgs li div{ width:66px; height:66px; border:1px solid #337AB7; }
 #menu .glyphicon { top:30px; left: 30px;}
@@ -36,8 +36,8 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 #img_detail{ 
 	height: 240px; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 #img_infos{ 
 	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.1);
@@ -50,8 +50,8 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 #heating_block{ 
 	height: 240px; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 
 .heating_info{ font-size: 5em;}
@@ -60,8 +60,8 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 #printing_block{ 
 	height: 240px; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 
 .film{
@@ -81,22 +81,26 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 	height: 240px; width: 311px;
 	overflow: auto; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 	padding:0;
 }
 
 #filament_menu .glyphicon { top:30px; left: 30px;}
 
 /** block Infos **/
-#infos_menu{ background: url('../images/bicephale_mini.png') 0 -34px /cover; height: 240px; display:none; }
+#infos_menu{ 
+	background: url('../images/bicephale_mini.png') 0 -34px /cover; 
+	height: 240px; 
+	//display:none; 
+}
 
 /** block X,Y,Z **/
 #xyz_menu{ 
 	height: 240px; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 
 #xyz_menu .btn{
@@ -109,8 +113,8 @@ li:hover, li:active{ background-color: rgb(27, 84, 112);}
 #parametres_menu{
 	height: 240px; 
 	position: relative;
-	left: 311px;
-	display: none;
+	//left: 311px;
+	//display: none;
 }
 
 .boutons{
