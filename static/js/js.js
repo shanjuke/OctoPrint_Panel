@@ -27,6 +27,12 @@ $(document).ready(function(){
 				window.location.reload();
 			} else {
 				owl_car.goTo(0);
+				$( "#printing_buttons" ).css("display","block");
+                $('.progress-bar').css("width","0%");
+                $('#print_progression').html("0%");
+                $('.progress-bar').html("0% complete...");
+                $('#printing_name').removeClass("ptl");
+
                 refresh_navbar(true, "");
 			}
 
@@ -70,20 +76,43 @@ $(document).ready(function(){
 
 		/************************************************/
 		//Printing menu:
-        $( ".img_item" ).click(function(){
-			owl_car.goTo(2);
-		});
 		$( "#btn_imprimer" ).click(function(){
 			owl_car.goTo(10);
 			//TODO: Put the machine on heat mode
 			setTimeout(function(){ 
 				owl_car.goTo(3);
 				$('#en_cours').css("display","inline"); //Afficher la notification
+				loop();
 			 }, 3000);
-			 //send(octopi_server+'start_print');
+			 //send(octopi_server+'print/'+file_to_print);
 			 //checkStatus();  // Request the server for printing infos
 
 		});
+
+		function loop(){
+			var i = 0;
+			var x = setInterval(function(){
+				refresh_printing_infos(i);
+				i +=10;
+				if(i > 100){ clearTimeout(x); task_finish();}
+			}, 2000);
+		}
+		function refresh_printing_infos(evolution){
+			console.log("text : "+evolution+"% complete...");
+			$('.progress-bar').css("width",evolution+"%");
+			$('.progress-bar').html(evolution+"% complete...");
+			$('#print_progression').html(evolution+"%");
+		}
+		function task_finish(){
+			$('#en_cours').css("display", "none");
+			$('#printing_buttons').css("display", "none");
+			$('#printing_name').addClass("ptl");
+
+			owl_car.goTo(3);
+            menu = "fichiers";
+            refresh_navbar(false, "Impression");
+		}
+
 		$( "#btn_arreter" ).click(function(){
 			owl_car.goTo(1);
 			refresh_navbar(false, "Impression");
@@ -265,17 +294,18 @@ $(document).ready(function(){
 
 		var progression = 0;
 
+		var files = [];
+		var file_to_print = "";
+
 		if (window.XMLHttpRequest){ 
 		    xmlhttp = new XMLHttpRequest();
 		}
 
         function getJSON(response){
+        	var json_response;
             try{
             	//console.log(response);
-                var json_response = JSON.parse(response);
-                //tab_files = json_response["files"];
-                //return tab_files;
-                //return JSON.stringify(json_response);
+                json_response = JSON.parse(response);
                 return json_response;
             }catch(e){
                 console.log("Le fichier n'est pas au format Json");
@@ -285,25 +315,44 @@ $(document).ready(function(){
         function setFiles(json){
             var files_view = $("#list_imgs ul");
 			var elt = $("#list_imgs ul li");
-			var new_elt = "";
-			var taille = 0;
+			var taille = json.length*66;
 
 			console.log("liste des fichiers imprimables");
-            elt.remove(); //Retirer les précédents elts
+			console.log(json);
 
-            for (var i = json.length - 1; i >= 0; i--) {
-                console.log(json[i]["name"]);
+			files_view.css("height", taille+"px"); //Redimentionner la vue
 
-                taille = json.length*66;
-                new_elt += '<li class="mod img_item">'
-                                +'<div class="fl" style=""></div>'
-                                +'<p class="mod ptm pls prs">'+json[i]["name"]+'</p>'
-                           +'</li>';
-                files_view.css("height", taille+"px"); //Redimentionner la vue
-                //files_view.prepend(new_elt); // Ajouter le nouvel elt
-            };
+			for (var i = 0 ; i <= json.length - 1; i++) {
+            //for (var i = json.length - 1; i >= 0; i--) {
+				var date = new Date(json[i]["date"]);
+				var time = new Date(json[i]["gcodeAnalysis"]["estimatedPrintTime"]);
 
-            files_view.html(new_elt);
+				files.push({"name": json[i]["name"],
+				            "date": date.toDateString(),
+				            "time": time.getHours()+"h"+time.getMinutes()+"mn"+time.getSeconds()+"s"
+				            });
+
+				var li = document.createElement("li");
+				li.className = "mod";
+				li.onclick = function() {
+				    console.log($(this).children("p").text());
+                    setFileInfos($(this).children("p").text());
+                    owl_car.goTo(2);
+				};
+
+				/*var div = document.createElement("div");
+				div.className = "fl";
+                div.style.background = "url('"+ json[i]["refs"]["resource"] + "') center center /cover";*/
+
+				var p = document.createElement("p");
+				p.className = "mod ptm pls prs";
+				p.innerHTML = json[i]["name"];
+
+				files_view.append(li);
+				//li.appendChild(div);
+				li.appendChild(p);
+            }
+
         }
 
 		function setInfos(json){
@@ -319,9 +368,36 @@ $(document).ready(function(){
 			version_bmk.html(json.version_bmk);
 			tps.html(json.tps);
 		}
+
+		function setFileInfos(selected_file){
+			var img_name = $("#img_name");
+			var img_estimated_time = $("#img_estimated_time");
+			var img_date_creation = $("#img_date_creation");
+
+			console.log("selected file : "+ selected_file);
+
+			for(item in files){
+				console.log(files[item].name);
+				if(files[item].name == selected_file){
+					img_name.html(files[item].name);
+					img_estimated_time.html(files[item].time);
+					img_date_creation.html(files[item].date);
+
+					file_to_print = files[item].name;
+					break;
+				}
+			}
+			printing_name.html(file_to_print);
+		}
+
+		function setFilaments(json){
+
+		}
+
 		//Send command to the octoprint server
 		send('http://127.0.0.1:4000/files'); //Get all printable files
-		send('http://127.0.0.1:4000/infos'); //Get general infos
+		setTimeout(function(){send('http://127.0.0.1:4000/infos');}, 500);  //Get general infos
+
 		function send(url)
 		{
 			var tab_files;
@@ -336,11 +412,16 @@ $(document).ready(function(){
                         //console.log(tab_files);
 
                         if(tab_files.files && tab_files.files != ""){
-                        	console.log("files received !" + tab_files);
+                        	console.log("files received !");
                             setFiles(tab_files.files);
+
                         }else if(tab_files.ip){
 							console.log("infos !" + tab_files);
 							setInfos(tab_files);
+
+                        }else if(tab_files.filaments){
+							console.log("filaments !" + tab_files);
+							setFilaments(tab_files);
                         }
 
                      }else{
@@ -373,12 +454,8 @@ $(document).ready(function(){
                        xmlhttp.onreadystatechange = function (aEvt) {
                            if (xmlhttp.readyState == 4) {
                               if(xmlhttp.status == 200){
-                              	var response = xmlhttp.responseText;
-                              	try{
-                              		var json_response = JSON.parse(response);
-                              	}catch(e){
-                              		console.log("Fichier n'est pas au format Json");
-                              	}
+                                var json_response = getJSON(xmlhttp.responseText);
+
                           		//console.log(JSON.stringify(json_response));
                           		print_progression.text(progression+"%");
                           		time_left.text(json_response[1]["progress"]["printTimeLeft"]+"mn");
@@ -404,7 +481,6 @@ $(document).ready(function(){
 		function stop_printing(){
 			//Arret du recueil d'infos 
 			clearInterval(repeat);
-
 		};
 
 		

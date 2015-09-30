@@ -7,7 +7,6 @@ import yaml
 import netifaces as ni
 
 
-
 ## Octopi fonctions
 class Fonctions():
     def __init__(self, host="0.0.0.0", port="1000"):
@@ -113,11 +112,17 @@ class Fonctions():
         print("start printing " + name)
         # 2 étapes s'imposent :
         # a/ charger le fichier -H api/files/local/Gear_12.stl --data {"command": "select", "print": false}
-        # b/ démarrer l'impresssion -H /api/job --data {"command": "start"}
-        data = {"command": "select", "print": True}
+        '''
         start_printing_url = self.apiurl_start_printing + "/{0}?apikey={1}".format(name, self.apikey)
-        # Send command
+        data = {"command": "select", "print": False}
         self._sendAPICommand(start_printing_url, data)
+        '''
+        # b/ démarrer l'impresssion -H /api/job --data {"command": "start"}
+        '''
+        data = {"command": "start"}
+        self._sendAPICommand(start_printing_url, data)
+        '''
+        # data = {"command": "select", "print": True}
         return
 
     def cancel(self):
@@ -174,11 +179,87 @@ class Fonctions():
         elif (type == "history"):  # Historique de la température
             pass
 
-
         return json.dumps(datas)
 
     def get_files(self):
-        datas = []
+        # datas = []
+        datas = {
+            "files": [
+                {
+                    "name": "whistle_v2.gcode",
+                    "size": 1468987,
+                    "date": 1378847754,
+                    "origin": "local",
+                    "refs": {
+                        "resource": "http://example.com/api/files/local/whistle_v2.gcode",
+                        "download": "http://example.com/downloads/files/local/whistle_v2.gcode"
+                    },
+                    "gcodeAnalysis": {
+                        "estimatedPrintTime": 1188,
+                        "filament": {
+                            "length": 810,
+                            "volume": 5.36
+                        }
+                    },
+                    "print": {
+                        "failure": 4,
+                        "success": 23,
+                        "last": {
+                            "date": 1387144346,
+                            "success": True
+                        }
+                    }
+                },
+                {
+                    "name": "vierge_marie.gcode",
+                    "origin": "sdcard",
+                    "date": 1378847754,
+                    "refs": {
+                        "resource": "http://example.com/api/files/sdcard/whistle_.gco"
+                    },
+                    "gcodeAnalysis": {
+                        "estimatedPrintTime": 1188,
+                        "filament": {
+                            "length": 810,
+                            "volume": 5.36
+                        }
+                    },
+                    "print": {
+                        "failure": 4,
+                        "success": 23,
+                        "last": {
+                            "date": 1387144346,
+                            "success": True
+                        }
+                    }
+                },
+                {
+                    "name": "coq.gcode",
+                    "origin": "sdcard",
+                    "date": 1378847754,
+                    "refs": {
+                        "resource": "http://example.com/api/files/sdcard/whistle_.gco"
+                    },
+                    "gcodeAnalysis": {
+                        "estimatedPrintTime": 1188,
+                        "filament": {
+                            "length": 810,
+                            "volume": 5.36
+                        }
+                    },
+                    "print": {
+                        "failure": 4,
+                        "success": 23,
+                        "last": {
+                            "date": 1387144346,
+                            "success": True
+                        }
+                    }
+                }
+            ],
+            "free": "3.2GB"
+        }
+        '''
         try:
             # Get status update
             req = requests.get(self.apiurl_files)
@@ -192,7 +273,7 @@ class Fonctions():
 
         except requests.exceptions.ConnectionError as e:
             print "Connection Error ({0}): {1}".format(e.errno, e.strerror)
-
+        '''
         return json.dumps(datas)
 
     # General infos
@@ -207,10 +288,9 @@ class Fonctions():
         print 'version_bmk  : {0}'.format(version_bmk)
         print 'firmware  : {0}'.format(firmware)
         print 'tps  : {0}'.format(tps)
-        datas = {'ip': ip, 'ap': hostname, 'version_bmk':version_bmk, 'firmware': firmware, 'tps' : tps}
+        datas = {'ip': ip, 'ap': hostname, 'version_bmk': version_bmk, 'firmware': firmware, 'tps': tps}
 
         return json.dumps(datas)
-
 
     def switch(self, state):
         if (state == 'on'):

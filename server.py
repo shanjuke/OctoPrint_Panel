@@ -136,5 +136,4 @@ def switch(state):
 if __name__ == '__main__':
     print ("Démarrage du serveur pour panel ...")
     f = Fonctions(host, octopi_port)
-#    f = Fonctions("192.168.0.31", 5000)
     app.run(host=host, port=port)

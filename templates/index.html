@@ -23,7 +23,7 @@
         </div>
         <div id="en_cours" class="right inbl mrs">
                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-            <p id="print_progression" class="mb0 inbl">68%</p>
+            <p id="print_progression" class="mb0 inbl">0%</p>
             <span class="glyphicon glyphicon-hourglass mls" aria-hidden="true"></span>
             <p id="time_left" class="mb0 inbl">30mn</p>
         </div>
@@ -55,111 +55,98 @@
                 <li class="pas item-button inbl" data-toggle="modal" data-target="#modal_shutdown">
                     <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     <span class="pas titre txtcenter"> Arrêt </span>
-
-                    <!-- Modal confirmer arrêt-->
-                    <div class="modal fade" id="modal_shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content mts">
-                          <div class="modal-body">
-                            <h2 class="txtcenter"> Eteindre la machine ?</h2>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default fl" data-dismiss="modal">Annuler</button>
-                            <button id="btn_reboot" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
-                            <button id="btn_shutdown" type="button" class="btn btn-danger" data-dismiss="modal">Eteindre</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                 </li>
             </ul>
+            <!-- Modal confirmer arrêt-->
+            <div class="modal fade" id="modal_shutdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content mts">
+                  <div class="modal-body">
+                    <h2 class="txtcenter"> Eteindre la machine ?</h2>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default fl" data-dismiss="modal">Annuler</button>
+                    <button id="btn_reboot" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
+                    <button id="btn_shutdown" type="button" class="btn btn-danger" data-dismiss="modal">Eteindre</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
         <!-- 2. Menu liste des fichiers -->
         <div class="item">
             <div id="list_imgs">
                 <ul class="pa0 mod" style="height: 293px;">
-                  <li class="mod img_item">
+                  <!--<li class="mod img_item">
                     <div class="fl" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;"></div>
-                    <p class="mod ptm pls prs">légo</p>
+                    <p class="mod ptm pls prs">whistle_v2.gcode</p>
                   </li>
                   <li class="mod img_item">
                     <div class="fl" style="background: url('{{ url_for('static', filename='images/obj2.png') }}') center center /cover;"></div>
-                    <p class="mod ptm pls prs">sainte mère</p>
+                    <p class="mod ptm pls prs">vierge_marie.gcode</p>
                   </li>
                   <li class="mod img_item">
                     <div class="fl"></div>
-                    <p class="mod ptm pls prs">img1</p>
+                    <p class="mod ptm pls prs">img1.stl</p>
                   </li>
                   <li class="mod img_item">
                     <div class="fl"></div>
-                    <p class="mod ptm pls prs">img2</p>
-                  </li>
+                    <p class="mod ptm pls prs">img2.stl</p>
+                  </li>-->
                 </ul>
             </div>
         </div>
         <!-- 3. Menu détail du fichier -->
         <div class="item">
-            <div id="img_detail" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
+            <div id="img_detail" style="background: url('{{ url_for('static', filename='images/bicephale_mini.png') }}') center 119% /cover;"><!--  -->
                 <div id="img_infos" class="mod pls prs">
-                    <div class="line">
-                        <p class="fl mb0">Température</p>
-                        <p class="fr mb0">88 deg.</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Filament</p>
-                        <p class="fr mb0">ABS</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Raft</p>
-                        <p class="fr mb0">NON</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Plate</p>
-                        <p class="fr mb0">100 deg.</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Time</p>
-                        <p class="fr mb0">25mn</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Epaisseur</p>
-                        <p class="fr mb0">0,20mm</p>
-                    </div>
-                    <div class="line">
-                        <p class="fl mb0">Extruders</p>
-                        <p class="fr mb0">2</p>
-                    </div>
-                    <button type="button" class="mts btn btn-primary" data-toggle="modal" data-target="#modal_print">Imprimer</button>
-                    <!-- Modal confirmer impression -->
-                    <div class="modal fade" id="modal_print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content mtl">
-                          <div class="modal-body">
-                            <h2 class="txtcenter"> Imprimer Légo ?</h2>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
-                            <button id="btn_imprimer" type="button" class="btn btn-primary" data-dismiss="modal">démarrer</button>
-                          </div>
+                    <div>
+                        <h2 class="line txtcenter ptm" id="img_name">Lego.stl</h2>
+                        <div class="w50 center">
+                            <div class="line txtleft">
+                                <span class="glyphicon glyphicon-hourglass"></span>
+                                <span id="img_estimated_time">1h30</span>
+                            </div>
+                            <div class="line txtleft">
+                                <span class="glyphicon glyphicon-save-file"></span>
+                                <span id="img_date_creation">07/11/2014</span>
+                            </div>
                         </div>
-                      </div>
+                    </div>
+                    <div style="margin-left:111px;">
+                        <button type="button" class="mts btn btn-primary" data-toggle="modal" data-target="#modal_print">Imprimer</button>
                     </div>
 
+
                 </div>
+            </div>
+            <!-- Modal confirmer impression -->
+            <div class="modal fade" id="modal_print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content mts">
+                  <div class="modal-body">
+                    <h2 class="txtcenter"> Imprimer ?</h2>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
+                    <button id="btn_imprimer" type="button" class="btn btn-primary" data-dismiss="modal">démarrer</button>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
         <!-- 4. Printing block -->
         <div class="item">
-            <div id="printing_block" style="background: url('{{ url_for('static', filename='images/obj.jpeg') }}') center center /cover;">
+            <div id="printing_block" style="background: url('{{ url_for('static', filename='images/bicephale_mini.png') }}') center 119% /cover;">
                 <div class="film pas">
                     <div class="" id="content">
                         <p id="printing_name" class="pas txtcenter mb0" style="font-size: 1.5em;"> Légo </p>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                                45% Complete...
+                            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                0% Complete...
                             </div>
                         </div>
-                        <div class="w50 center">
+                        <div class="w50 center" id="printing_buttons">
                             <button id="btn_pause" type="button" class="fl btn btn-warning" data-toggle="modal" data-target="#modal_pause">Pause</button>
                             <button id="btn_cancel" type="button" class="fr btn btn-danger" data-toggle="modal" data-target="#modal_cancel">Annuler</button>
                         </div>
@@ -171,9 +158,9 @@
                 <!-- Modal confirmer arrêt-->
                 <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
-                    <div class="modal-content mtl">
+                    <div class="modal-content mts">
                       <div class="modal-body">
-                        <h2 class="txtcenter"> Arrêter l'impression de Légo ?</h2>
+                        <h2 class="txtcenter"> Arrêter l'impression ?</h2>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default fl" data-dismiss="modal">annuler</button>
@@ -185,9 +172,9 @@
                 <!-- Modal confirmer arrêt-->
                 <div class="modal fade" id="modal_pause" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
-                    <div class="modal-content mtl">
+                    <div class="modal-content mts">
                       <div class="modal-body">
-                        <h2 class="txtcenter"> Impression de Légo en pause !</h2>
+                        <h2 class="txtcenter"> Impression en pause !</h2>
                       </div>
                       <div class="modal-footer">
                         <button id="btn_pause_arreter" type="button" class="btn btn-danger fl" data-dismiss="modal">Arrêter</button>
@@ -231,23 +218,23 @@
                 <div class="film pas">
                     <div class="line">
                         <p class="fl mb0">BMK</p>
-                        <p class="fr mb0" id="version_bmk">v 1.0</p>
+                        <p class="fr mb0" id="version_bmk"></p>
                     </div>
                     <div class="line">
                         <p class="fl mb0">Firmware</p>
-                        <p class="fr mb0" id="firmware">Marlin</p>
+                        <p class="fr mb0" id="firmware"></p>
                     </div>
                     <div class="line">
                         <p class="fl mb0">Adresse IP</p>
-                        <p class="fr mb0" id="ip">192.168.0.10</p>
+                        <p class="fr mb0" id="ip"></p>
                     </div>
                     <div class="line">
                         <p class="fl mb0">Accès wifi</p>
-                        <p class="fr mb0" id="ap">bipi.local</p>
+                        <p class="fr mb0" id="ap"></p>
                     </div>
                     <div class="line">
                         <p class="fl mb0">Temps impression</p>
-                        <p class="fr mb0" id="tps">6h36mn32s</p>
+                        <p class="fr mb0" id="tps"></p>
                     </div>
                 </div>
             </div>
